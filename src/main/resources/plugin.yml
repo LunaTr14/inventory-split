@@ -1,0 +1,4 @@
+name: inventory-split
+version: '${project.version}'
+main: xyz.lunatrn.inventorysplit.Main
+api-version: '1.20'
