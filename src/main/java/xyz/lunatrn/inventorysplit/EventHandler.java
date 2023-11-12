@@ -1,18 +1,15 @@
 package xyz.lunatrn.inventorysplit;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.logging.Level;
 
 public class EventHandler implements Listener {
     private Main plugin;
@@ -32,11 +29,15 @@ public class EventHandler implements Listener {
     @org.bukkit.event.EventHandler
     public boolean onPlayerDeath(PlayerDeathEvent deathEvent){
 
-        LinkedList<ItemStack> inventoryContent = new LinkedList<>();
-        for(ItemStack cont : deathEvent.getPlayer().getInventory().getContents()){
-            inventoryContent.add(cont);
-        }
+        LinkedList<ItemStack> totalInventory = new LinkedList<>();
 
+        for(ItemStack cont : deathEvent.getPlayer().getInventory().getContents()){
+            if(cont != null){
+                totalInventory.add(cont);
+            }
+
+        }
+        LinkedList<ItemStack> inventoryContent = destroyPercentageItems(totalInventory,plugin.ITEM_LOSS_PERCENTAGE);
         deathEvent.getDrops().clear();
         Collection<? extends Player> onlinePlayers = plugin.getServer().getOnlinePlayers();
         plugin.getServer().broadcast(Component.text("Items of " + deathEvent.getPlayer().getName() + " Will be split in " + SPLIT_DELAY_SECONDS));
@@ -58,5 +59,13 @@ public class EventHandler implements Listener {
             return (Player) playerList.toArray()[0];
         }
         return (Player) playerList.toArray()[(random.nextInt(playerList.size()))];
+    }
+
+    private LinkedList<ItemStack> destroyPercentageItems(LinkedList<ItemStack> items, float percentageLoss){
+        int totalItemsLost = (int) Math.ceil(items.size() * percentageLoss);
+        for(int i = 0; i < totalItemsLost; i++){
+            items.remove(i);
+        }
+        return items;
     }
 }
