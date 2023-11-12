@@ -40,7 +40,7 @@ public class EventHandler implements Listener {
         LinkedList<ItemStack> inventoryContent = destroyPercentageItems(totalInventory,plugin.ITEM_LOSS_PERCENTAGE);
         deathEvent.getDrops().clear();
         Collection<? extends Player> onlinePlayers = plugin.getServer().getOnlinePlayers();
-        plugin.getServer().broadcast(Component.text("Items of " + deathEvent.getPlayer().getName() + " Will be split in " + SPLIT_DELAY_SECONDS));
+        plugin.getServer().broadcast(Component.text("Items of " + deathEvent.getPlayer().getName() + " will be split in " + SPLIT_DELAY_SECONDS + " Seconds"));
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -50,6 +50,7 @@ public class EventHandler implements Listener {
                         getRandomPlayer(onlinePlayers).getInventory().addItem(item);
                     }
                 }
+                plugin.getServer().broadcast(Component.text("Items of " + deathEvent.getPlayer().getName() + " has been distributed"));
             }
         }.runTaskLaterAsynchronously(plugin,20*SPLIT_DELAY_SECONDS);
         return true;
